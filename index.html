@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Upload with Comments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Размещает фото по сторонам */
+        }
+        .photo-container {
+            flex-basis: 30%; /* Ширина каждого фото будет около 30% */
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        img {
+            width: 100%; /* Фото растягивается на всю ширину контейнера */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .comments {
+            margin-top: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .comment-form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload your photo</h1>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+
+    <h2>Uploaded Photos:</h2>
+    <div class="gallery">
+        {% for photo in photos %}
+            <div class="photo-container">
+                <img src="{{ url_for('uploaded_file', filename=photo) }}" alt="{{ photo }}">
+                <div class="comments">
+                    <h4>Comments:</h4>
+                    <ul>
+                        {% for comment in comments[photo] %}
+                            <li>{{ comment }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form action="/comment/{{ photo }}" method="post" class="comment-form">
+                        <input type="text" name="comment" placeholder="Add a comment">
+                        <input type="submit" value="Post">
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
